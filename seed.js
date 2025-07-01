@@ -14,6 +14,27 @@ try {
   const stmt = db.prepare('INSERT INTO recipes (mood, title, description, steps) VALUES (?, ?, ?, ?)');
   
   // Happy
+  stmt.run('happy', 'Pasta alla Vongole', 'Des spaghetti aux palourdes, l\'un des plats préférés de Candice !', JSON.stringify([
+    'Faites cuire les spaghetti dans de l\'eau salée.',
+    'Dans une poêle, faites revenir de l\'ail et du piment dans l\'huile d\'olive.',
+    'Ajoutez les palourdes et faites-les ouvrir à feu vif.',
+    'Ajoutez les pâtes, du persil et un peu d\'eau de cuisson.',
+    'Servez immédiatement avec du citron.'
+  ]));
+  stmt.run('happy', 'Lasagna alla Bolognese', 'Une lasagne traditionnelle italienne, gratinée et fondante.', JSON.stringify([
+    'Préparez la sauce bolognaise avec viande hachée, oignons, carottes, céleri.',
+    'Faites cuire les feuilles de lasagne.',
+    'Alternez couches de pâtes, sauce bolognaise, béchamel et parmesan.',
+    'Faites gratiner au four 30 minutes à 180°C.',
+    'Laissez reposer 10 minutes avant de servir.'
+  ]));
+  stmt.run('happy', 'Insalata Caprese', 'Une salade fraîche aux couleurs de l\'Italie.', JSON.stringify([
+    'Coupez des tomates et de la mozzarella en tranches.',
+    'Disposez-les en alternance sur un plat.',
+    'Ajoutez des feuilles de basilic frais.',
+    'Arrosez d\'huile d\'olive et de balsamique.',
+    'Salez et poivrez selon votre goût.'
+  ]));
   stmt.run('happy', 'Crêpes Suzette', 'Des crêpes fines nappées d\'une sauce à l\'orange flambée.', JSON.stringify([
     'Préparez la pâte à crêpes et laissez reposer 30 minutes.',
     'Faites cuire les crêpes dans une poêle chaude.',
@@ -82,6 +103,13 @@ try {
   ]));
 
   // Sad
+  stmt.run('sad', 'Lasagna al Forno', 'Une lasagne réconfortante au fromage et à la viande.', JSON.stringify([
+    'Préparez une sauce tomate avec viande hachée et épices.',
+    'Faites une béchamel crémeuse.',
+    'Alternez couches de lasagne, sauce, béchamel et fromage.',
+    'Faites gratiner 25 minutes à 180°C.',
+    'Servez bien chaud et réconfortant.'
+  ]));
   stmt.run('sad', 'Gratin Dauphinois', 'Des pommes de terre fondantes à la crème et au fromage.', JSON.stringify([
     'Préchauffez le four à 180°C.',
     'Épluchez et coupez les pommes de terre en fines rondelles.',
@@ -145,6 +173,13 @@ try {
   ]));
 
   // Adventurous
+  stmt.run('adventurous', 'Pasta alla Norma', 'Des pâtes siciliennes aux aubergines et ricotta salée.', JSON.stringify([
+    'Faites griller des aubergines coupées en dés.',
+    'Faites cuire des pâtes courtes (rigatoni).',
+    'Préparez une sauce tomate avec ail et basilic.',
+    'Mélangez pâtes, sauce, aubergines et ricotta salée.',
+    'Parsemez de basilic frais et servez.'
+  ]));
   stmt.run('adventurous', 'Bouillabaisse', 'Une soupe de poissons provençale parfumée au safran.', JSON.stringify([
     'Préparez un bouillon avec des poissons de roche, oignons, tomates, ail et safran.',
     'Filtrez le bouillon et faites cuire des morceaux de poisson plus nobles dedans.',
@@ -202,6 +237,12 @@ try {
   ]));
 
   // Relaxed
+  stmt.run('relaxed', 'Insalata Caesar', 'La salade préférée de Candice, fraîche et croquante.', JSON.stringify([
+    'Lavez et coupez la laitue romaine.',
+    'Préparez la vinaigrette Caesar avec anchois, ail, citron, parmesan.',
+    'Ajoutez des croûtons dorés et du parmesan râpé.',
+    'Mélangez délicatement et servez frais.'
+  ]));
   stmt.run('relaxed', 'Quiche Lorraine', 'Une tarte salée aux lardons et à la crème.', JSON.stringify([
     'Préchauffez le four à 180°C.',
     'Étalez la pâte dans un moule.',
@@ -259,6 +300,17 @@ try {
   ]));
 
   // Energetic
+  stmt.run('energetic', 'Insalata Mista', 'Une salade italienne fraîche et énergisante.', JSON.stringify([
+    'Mélangez laitue, roquette, tomates cerises, concombre.',
+    'Ajoutez des olives et du parmesan.',
+    'Assaisonnez avec huile d\'olive, vinaigre balsamique, sel, poivre.'
+  ]));
+  stmt.run('energetic', 'Pasta al Pomodoro', 'Des spaghetti à la sauce tomate fraîche et basilic.', JSON.stringify([
+    'Faites cuire les spaghetti al dente.',
+    'Préparez une sauce tomate avec ail, basilic frais.',
+    'Mélangez pâtes et sauce, ajoutez du parmesan.',
+    'Servez immédiatement.'
+  ]));
   stmt.run('energetic', 'Ratatouille', 'Un plat de légumes mijotés, plein de couleurs et de vitamines.', JSON.stringify([
     'Coupez aubergines, courgettes, poivrons, tomates en dés.',
     'Faites revenir chaque légume séparément dans l\'huile d\'olive.',
