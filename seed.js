@@ -1,9 +1,9 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./recipes.db');
+const Database = require('better-sqlite3');
+const db = new Database('./recipes.db');
 
-db.serialize(() => {
-  db.run('DROP TABLE IF EXISTS recipes');
-  db.run(`CREATE TABLE recipes (
+try {
+  db.exec('DROP TABLE IF EXISTS recipes');
+  db.exec(`CREATE TABLE recipes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     mood TEXT NOT NULL,
     title TEXT NOT NULL,
@@ -12,13 +12,14 @@ db.serialize(() => {
   )`);
 
   const stmt = db.prepare('INSERT INTO recipes (mood, title, description, steps) VALUES (?, ?, ?, ?)');
+  
   // Happy
-  stmt.run('happy', 'Crêpes Suzette', 'Des crêpes fines nappées d’une sauce à l’orange flambée.', JSON.stringify([
+  stmt.run('happy', 'Crêpes Suzette', 'Des crêpes fines nappées d'une sauce à l'orange flambée.', JSON.stringify([
     'Préparez la pâte à crêpes et laissez reposer 30 minutes.',
     'Faites cuire les crêpes dans une poêle chaude.',
-    'Dans une autre poêle, faites fondre du beurre, ajoutez du sucre, du jus et du zeste d’orange.',
+    'Dans une autre poêle, faites fondre du beurre, ajoutez du sucre, du jus et du zeste d'orange.',
     'Pliez les crêpes, nappez-les de sauce et flambez au Grand Marnier.',
-    'Servez chaud avec des zestes d’orange.'
+    'Servez chaud avec des zestes d'orange.'
   ]));
   stmt.run('happy', 'Tarte Tatin', 'Une tarte aux pommes caramélisées, renversée et fondante.', JSON.stringify([
     'Préchauffez le four à 180°C.',
@@ -31,7 +32,7 @@ db.serialize(() => {
     'Préchauffez le four à 200°C.',
     'Mélangez œufs, sucre, farine, levure et beurre fondu.',
     'Versez la pâte dans des moules à madeleines.',
-    'Faites cuire 8-10 minutes jusqu’à ce qu’elles soient dorées.',
+    'Faites cuire 8-10 minutes jusqu'à ce qu'elles soient dorées.',
     'Laissez refroidir avant de déguster.'
   ]));
   stmt.run('happy', 'Île flottante', 'Un dessert aérien de blancs en neige sur une crème anglaise.', JSON.stringify([
@@ -42,8 +43,8 @@ db.serialize(() => {
   ]));
   stmt.run('happy', 'Financiers', 'Petits gâteaux aux amandes, dorés et moelleux.', JSON.stringify([
     'Préchauffez le four à 180°C.',
-    'Mélangez poudre d’amandes, sucre glace, farine.',
-    'Ajoutez des blancs d’œufs et du beurre fondu.',
+    'Mélangez poudre d'amandes, sucre glace, farine.',
+    'Ajoutez des blancs d'œufs et du beurre fondu.',
     'Versez dans des moules à financiers.',
     'Faites cuire 15 minutes.'
   ]));
@@ -63,12 +64,12 @@ db.serialize(() => {
     'Préchauffez le four à 200°C.',
     'Préparez la frangipane (amandes, sucre, beurre, œufs).',
     'Étalez la pâte feuilletée, garnissez de frangipane.',
-    'Recouvrez d’une autre pâte, soudez les bords.',
+    'Recouvrez d'une autre pâte, soudez les bords.',
     'Dorez et faites cuire 30 minutes.'
   ]));
   stmt.run('happy', 'Mousse au chocolat', 'Un dessert onctueux et gourmand.', JSON.stringify([
     'Faites fondre du chocolat.',
-    'Séparez les blancs des jaunes d’œufs.',
+    'Séparez les blancs des jaunes d'œufs.',
     'Mélangez les jaunes au chocolat fondu.',
     'Incorporez délicatement les blancs montés en neige.',
     'Réfrigérez 2h avant de servir.'
@@ -86,9 +87,9 @@ db.serialize(() => {
     'Épluchez et coupez les pommes de terre en fines rondelles.',
     'Disposez-les dans un plat à gratin, salez, poivrez.',
     'Ajoutez de la crème et du lait, parsemez de fromage râpé.',
-    'Faites cuire 1h jusqu’à ce que le dessus soit doré.'
+    'Faites cuire 1h jusqu'à ce que le dessus soit doré.'
   ]));
-  stmt.run('sad', 'Soupe à l’oignon', 'Une soupe réconfortante gratinée au fromage.', JSON.stringify([
+  stmt.run('sad', 'Soupe à l'oignon', 'Une soupe réconfortante gratinée au fromage.', JSON.stringify([
     'Émincez les oignons et faites-les revenir dans du beurre.',
     'Ajoutez de la farine, puis du bouillon.',
     'Laissez mijoter 30 minutes.',
@@ -109,7 +110,7 @@ db.serialize(() => {
     'Servez tiède ou froid.'
   ]));
   stmt.run('sad', 'Tartiflette', 'Un gratin savoyard au reblochon, pommes de terre et lardons.', JSON.stringify([
-    'Faites cuire les pommes de terre à l’eau.',
+    'Faites cuire les pommes de terre à l'eau.',
     'Faites revenir lardons et oignons.',
     'Disposez pommes de terre, lardons, oignons dans un plat.',
     'Ajoutez le reblochon coupé en deux.',
@@ -121,7 +122,7 @@ db.serialize(() => {
     'Servez la viande et les légumes avec du bouillon.'
   ]));
   stmt.run('sad', 'Purée maison', 'Une purée de pommes de terre onctueuse.', JSON.stringify([
-    'Faites cuire les pommes de terre à l’eau.',
+    'Faites cuire les pommes de terre à l'eau.',
     'Écrasez-les avec du beurre et du lait.',
     'Salez, poivrez et servez bien chaud.'
   ]));
@@ -139,7 +140,7 @@ db.serialize(() => {
   ]));
   stmt.run('sad', 'Gâteau au yaourt', 'Un gâteau moelleux et facile à faire.', JSON.stringify([
     'Mélangez un pot de yaourt, deux pots de sucre, trois pots de farine.',
-    'Ajoutez trois œufs, un demi-pot d’huile, un sachet de levure.',
+    'Ajoutez trois œufs, un demi-pot d'huile, un sachet de levure.',
     'Versez dans un moule et faites cuire 30 minutes à 180°C.'
   ]));
 
@@ -157,7 +158,7 @@ db.serialize(() => {
     'Servez bien chaud.'
   ]));
   stmt.run('adventurous', 'Escargots de Bourgogne', 'Escargots cuits au beurre persillé.', JSON.stringify([
-    'Préparez un beurre d’ail et de persil.',
+    'Préparez un beurre d'ail et de persil.',
     'Placez un peu de beurre dans chaque coquille avec un escargot.',
     'Disposez les escargots dans un plat.',
     'Faites gratiner 10 minutes à 200°C.',
@@ -184,7 +185,7 @@ db.serialize(() => {
     'Faites dorer à la poêle et servez avec une salade.'
   ]));
   stmt.run('adventurous', 'Cervelle meunière', 'Un mets délicat pour les aventuriers.', JSON.stringify([
-    'Faites tremper la cervelle dans l’eau froide.',
+    'Faites tremper la cervelle dans l'eau froide.',
     'Faites-la pocher, puis panez et faites dorer au beurre.',
     'Servez avec du citron.'
   ]));
@@ -211,7 +212,7 @@ db.serialize(() => {
   stmt.run('relaxed', 'Salade niçoise', 'Une salade fraîche et colorée du Sud de la France.', JSON.stringify([
     'Lavez et coupez tomates, poivrons, radis, œufs durs, thon, olives.',
     'Disposez joliment les ingrédients dans un saladier.',
-    'Assaisonnez avec huile d’olive, sel, poivre et basilic.'
+    'Assaisonnez avec huile d'olive, sel, poivre et basilic.'
   ]));
   stmt.run('relaxed', 'Croque-monsieur', 'Un sandwich chaud au jambon et fromage, doré à la poêle.', JSON.stringify([
     'Beurrez deux tranches de pain de mie.',
@@ -227,7 +228,7 @@ db.serialize(() => {
   ]));
   stmt.run('relaxed', 'Soupe de légumes', 'Une soupe douce et réconfortante.', JSON.stringify([
     'Épluchez et coupez les légumes de saison.',
-    'Faites-les cuire dans de l’eau salée.',
+    'Faites-les cuire dans de l'eau salée.',
     'Mixez et servez chaud.'
   ]));
   stmt.run('relaxed', 'Tartine chèvre-miel', 'Une tartine grillée au fromage de chèvre et miel.', JSON.stringify([
@@ -237,10 +238,10 @@ db.serialize(() => {
   ]));
   stmt.run('relaxed', 'Salade de tomates anciennes', 'Une salade simple et savoureuse.', JSON.stringify([
     'Coupez différentes variétés de tomates.',
-    'Ajoutez huile d’olive, sel, poivre, basilic.',
+    'Ajoutez huile d'olive, sel, poivre, basilic.',
     'Mélangez et servez frais.'
   ]));
-  stmt.run('relaxed', 'Rillettes de thon', 'Une tartinade fraîche pour l’apéritif.', JSON.stringify([
+  stmt.run('relaxed', 'Rillettes de thon', 'Une tartinade fraîche pour l'apéritif.', JSON.stringify([
     'Émiettez du thon en boîte.',
     'Mélangez avec du fromage frais, citron, herbes.',
     'Servez sur des toasts.'
@@ -253,24 +254,24 @@ db.serialize(() => {
   stmt.run('relaxed', 'Pissaladière', 'Une tarte provençale aux oignons et anchois.', JSON.stringify([
     'Préparez une pâte à pain.',
     'Faites fondre des oignons à la poêle.',
-    'Étalez la pâte, garnissez d’oignons, anchois, olives.',
+    'Étalez la pâte, garnissez d'oignons, anchois, olives.',
     'Faites cuire 25 minutes à 200°C.'
   ]));
 
   // Energetic
   stmt.run('energetic', 'Ratatouille', 'Un plat de légumes mijotés, plein de couleurs et de vitamines.', JSON.stringify([
     'Coupez aubergines, courgettes, poivrons, tomates en dés.',
-    'Faites revenir chaque légume séparément dans l’huile d’olive.',
+    'Faites revenir chaque légume séparément dans l'huile d'olive.',
     'Mélangez tous les légumes et laissez mijoter 30 minutes.',
     'Servez chaud ou froid.'
   ]));
-  stmt.run('energetic', 'Salade de lentilles', 'Une salade nourrissante et pleine d’énergie.', JSON.stringify([
-    'Faites cuire les lentilles dans de l’eau salée.',
+  stmt.run('energetic', 'Salade de lentilles', 'Une salade nourrissante et pleine d'énergie.', JSON.stringify([
+    'Faites cuire les lentilles dans de l'eau salée.',
     'Égouttez et laissez refroidir.',
     'Ajoutez échalotes, carottes râpées, vinaigrette et persil.',
     'Mélangez et servez.'
   ]));
-  stmt.run('energetic', 'Clafoutis aux cerises', 'Un dessert léger aux cerises, parfait pour l’été.', JSON.stringify([
+  stmt.run('energetic', 'Clafoutis aux cerises', 'Un dessert léger aux cerises, parfait pour l'été.', JSON.stringify([
     'Préchauffez le four à 180°C.',
     'Beurrez un plat et disposez les cerises.',
     'Mélangez œufs, sucre, farine, lait et versez sur les cerises.',
@@ -280,10 +281,10 @@ db.serialize(() => {
   stmt.run('energetic', 'Salade de quinoa', 'Une salade fraîche et protéinée.', JSON.stringify([
     'Faites cuire le quinoa.',
     'Ajoutez tomates, concombre, feta, herbes.',
-    'Assaisonnez avec huile d’olive et citron.'
+    'Assaisonnez avec huile d'olive et citron.'
   ]));
   stmt.run('energetic', 'Taboulé', 'Une salade de semoule, légumes et herbes.', JSON.stringify([
-    'Faites gonfler la semoule avec de l’eau.',
+    'Faites gonfler la semoule avec de l'eau.',
     'Ajoutez tomates, concombre, menthe, persil.',
     'Assaisonnez et servez frais.'
   ]));
@@ -294,26 +295,27 @@ db.serialize(() => {
   ]));
   stmt.run('energetic', 'Tian de légumes', 'Un gratin coloré de légumes du soleil.', JSON.stringify([
     'Coupez courgettes, aubergines, tomates en rondelles.',
-    'Disposez-les dans un plat, arrosez d’huile d’olive.',
+    'Disposez-les dans un plat, arrosez d'huile d'olive.',
     'Faites cuire 40 minutes à 180°C.'
   ]));
-  stmt.run('energetic', 'Soupe froide de concombre', 'Une soupe rafraîchissante pour l’été.', JSON.stringify([
+  stmt.run('energetic', 'Soupe froide de concombre', 'Une soupe rafraîchissante pour l'été.', JSON.stringify([
     'Mixez concombre, yaourt, menthe, sel, poivre.',
     'Servez bien frais.'
   ]));
-  stmt.run('energetic', 'Poêlée de champignons', 'Des champignons sautés à l’ail et au persil.', JSON.stringify([
+  stmt.run('energetic', 'Poêlée de champignons', 'Des champignons sautés à l'ail et au persil.', JSON.stringify([
     'Nettoyez et coupez les champignons.',
     'Faites-les sauter à la poêle avec ail et persil.',
     'Servez chaud.'
   ]));
   stmt.run('energetic', 'Gaspacho', 'Une soupe froide de légumes mixés.', JSON.stringify([
     'Mixez tomates, poivrons, concombre, oignon, ail.',
-    'Ajoutez huile d’olive, vinaigre, sel, poivre.',
+    'Ajoutez huile d'olive, vinaigre, sel, poivre.',
     'Servez très frais.'
   ]));
-  stmt.finalize();
 
   console.log('Database seeded!');
-});
-
-db.close(); 
+} catch (error) {
+  console.error('Error seeding database:', error);
+} finally {
+  db.close();
+} 
