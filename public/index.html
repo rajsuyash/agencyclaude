@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recettes pour Candice ❤️</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-pink-50 min-h-screen flex flex-col items-center justify-center">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md border-2 border-pink-200">
+    <div class="flex flex-col items-center mb-4">
+      <span class="text-4xl">🇫🇷</span>
+      <h1 class="text-3xl font-extrabold mb-2 text-pink-600 text-center">Pour Candice, avec amour ❤️</h1>
+      <p class="text-center text-gray-600 mb-2">Des recettes choisies selon ton humeur, rien que pour toi, ma chérie !</p>
+      <p class="text-center text-pink-400 italic mb-4">— Suyash</p>
+    </div>
+    <div id="mood-selector" class="flex flex-wrap gap-2 justify-center mb-6"></div>
+    <div id="recipe-card" class="hidden flex flex-col items-center">
+      <h2 id="recipe-title" class="text-2xl font-bold mb-2 text-pink-700"></h2>
+      <p id="recipe-desc" class="mb-4 text-gray-700"></p>
+      <button id="new-recipe" class="bg-pink-500 text-white px-4 py-2 rounded-full shadow hover:bg-pink-600 transition">Montre-moi une autre recette</button>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html> 
