@@ -3,6 +3,7 @@ services:
     name: calendar-app
     env: node
     plan: free
+    rootDir: ./Calendar
     buildCommand: npm ci && npm run build
     startCommand: npm start
     envVars:
