@@ -75,11 +75,9 @@ const moodToSearchParams = {
     cuisine: 'mediterranean,healthy'
   },
   diet: {
-    tags: 'healthy,low calories,weight loss,nutritious,clean eating',
-    type: 'salad,main course,soup,smoothie',
-    cuisine: 'mediterranean,healthy',
-    diet: 'vegetarian,low carb,keto,paleo',
-    maxCalories: 400
+    tags: 'healthy,nutritious',
+    type: 'salad,main course,soup',
+    cuisine: 'mediterranean'
   }
 };
 
@@ -289,7 +287,40 @@ function getDemoRecipes(mood) {
         servings: 24
       }
     ],
-    // Add more demo recipes for other moods...
+    diet: [
+      {
+        id: 2001,
+        title: 'Salade Méditerranéenne',
+        description: 'Une salade fraîche et nutritive avec des ingrédients méditerranéens, parfaite pour ma princesse en forme.',
+        image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop',
+        prep_time: 15,
+        cook_time: 0,
+        difficulty: 'easy',
+        category: 'salad',
+        cuisine_type: 'mediterranean',
+        ingredients: JSON.stringify(['Tomates cerises', 'Concombre', 'Feta', 'Olives kalamata', 'Huile d\'olive', 'Citron', 'Herbes fraîches']),
+        steps: JSON.stringify(['Couper les légumes en dés', 'Ajouter la feta émiettée', 'Assaisonner avec huile d\'olive et citron', 'Garnir d\'herbes fraîches']),
+        mood: mood,
+        is_favorite: false,
+        servings: 2
+      },
+      {
+        id: 2002,
+        title: 'Bowl de Quinoa aux Légumes',
+        description: 'Un bowl coloré et nutritif avec quinoa, légumes grillés et avocat pour ma consultante BCG préférée.',
+        image_url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=600&fit=crop',
+        prep_time: 20,
+        cook_time: 15,
+        difficulty: 'easy',
+        category: 'main course',
+        cuisine_type: 'healthy',
+        ingredients: JSON.stringify(['Quinoa', 'Courgettes', 'Poivrons', 'Avocat', 'Pousses d\'épinards', 'Graines de tournesol', 'Vinaigrette tahini']),
+        steps: JSON.stringify(['Cuire le quinoa', 'Griller les légumes', 'Assembler le bowl avec épinards', 'Ajouter avocat et graines', 'Arroser de vinaigrette']),
+        mood: mood,
+        is_favorite: false,
+        servings: 1
+      }
+    ]
   };
   
   return demoRecipes[mood] || demoRecipes.happy;
