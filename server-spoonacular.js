@@ -10,10 +10,11 @@ const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
 // Check if API key is set
 if (!SPOONACULAR_API_KEY || SPOONACULAR_API_KEY === 'your_api_key_here') {
-  console.log('⚠️  SPOONACULAR_API_KEY not set in .env file');
+  console.log('⚠️  SPOONACULAR_API_KEY not set in environment variables');
   console.log('📝 Please get your free API key from: https://spoonacular.com/food-api');
   console.log('📝 You get 150 free requests per day');
-  console.log('📝 Add it to .env file as: SPOONACULAR_API_KEY=your_actual_key');
+  console.log('📝 Add it to environment variables as: SPOONACULAR_API_KEY=your_actual_key');
+  console.log('🔧 For Render: Set environment variable in Dashboard > Environment tab');
 }
 
 // SQLite setup for favorites and history (keeping local data)
@@ -84,7 +85,7 @@ const moodToSearchParams = {
 // Spoonacular API helper functions
 async function searchRecipesByMood(mood, excludeIds = []) {
   if (!SPOONACULAR_API_KEY || SPOONACULAR_API_KEY === 'your_api_key_here') {
-    // Fallback to demo data when no API key
+    console.log(`🔄 Using demo data for mood: ${mood} (API key not configured)`);
     return getDemoRecipes(mood);
   }
 
@@ -106,11 +107,14 @@ async function searchRecipesByMood(mood, excludeIds = []) {
     if (searchParams.diet) requestParams.diet = searchParams.diet;
     if (searchParams.maxCalories) requestParams.maxCalories = searchParams.maxCalories;
 
+    console.log(`🔍 Searching Spoonacular API for mood: ${mood} with params:`, requestParams);
+    
     const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
       params: requestParams
     });
 
     const recipes = response.data.results;
+    console.log(`✅ Found ${recipes.length} recipes from Spoonacular API for mood: ${mood}`);
     
     // Filter out excluded recipes
     const filteredRecipes = recipes.filter(recipe => !excludeIds.includes(recipe.id));
@@ -136,17 +140,25 @@ async function searchRecipesByMood(mood, excludeIds = []) {
       source_url: recipe.sourceUrl
     }));
   } catch (error) {
-    console.error('Spoonacular API error:', error.message);
+    console.error(`❌ Spoonacular API error for mood ${mood}:`, error.message);
+    if (error.response) {
+      console.error('API Response Status:', error.response.status);
+      console.error('API Response Data:', error.response.data);
+    }
+    console.log(`🔄 Falling back to demo data for mood: ${mood}`);
     return getDemoRecipes(mood);
   }
 }
 
 async function getRecipeDetails(recipeId) {
   if (!SPOONACULAR_API_KEY || SPOONACULAR_API_KEY === 'your_api_key_here') {
+    console.log(`🔄 Using demo recipe details for ID: ${recipeId} (API key not configured)`);
     return getDemoRecipeDetails(recipeId);
   }
 
   try {
+    console.log(`🔍 Fetching recipe details for ID: ${recipeId} from Spoonacular API`);
+    
     const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/information`, {
       params: {
         apiKey: SPOONACULAR_API_KEY,
@@ -155,6 +167,7 @@ async function getRecipeDetails(recipeId) {
     });
 
     const recipe = response.data;
+    console.log(`✅ Successfully fetched recipe details for: ${recipe.title}`);
     
     // Get cooking instructions
     let steps = [];
@@ -181,13 +194,19 @@ async function getRecipeDetails(recipeId) {
       source_url: recipe.sourceUrl
     };
   } catch (error) {
-    console.error('Error fetching recipe details:', error.message);
+    console.error(`❌ Error fetching recipe details for ID ${recipeId}:`, error.message);
+    if (error.response) {
+      console.error('API Response Status:', error.response.status);
+      console.error('API Response Data:', error.response.data);
+    }
+    console.log(`🔄 Falling back to demo recipe details for ID: ${recipeId}`);
     return getDemoRecipeDetails(recipeId);
   }
 }
 
 async function searchRecipes(query, filters = {}) {
   if (!SPOONACULAR_API_KEY || SPOONACULAR_API_KEY === 'your_api_key_here') {
+    console.log(`🔄 Using demo search results for query: "${query}" (API key not configured)`);
     return getDemoSearchResults(query);
   }
 
@@ -210,7 +229,7 @@ async function searchRecipes(query, filters = {}) {
     if (filters.includeIngredients) params.includeIngredients = filters.includeIngredients;
     if (filters.excludeIngredients) params.excludeIngredients = filters.excludeIngredients;
 
-    console.log('Search params:', params); // Debug log
+    console.log(`🔍 Searching Spoonacular API with query: "${query}" and params:`, params);
 
     const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
       params
@@ -233,10 +252,15 @@ async function searchRecipes(query, filters = {}) {
       spoonacularScore: recipe.spoonacularScore || 0
     }));
 
-    console.log(`Found ${recipes.length} recipes`); // Debug log
+    console.log(`✅ Found ${recipes.length} recipes from Spoonacular API for query: "${query}"`);
     return recipes;
   } catch (error) {
-    console.error('Search error:', error.message);
+    console.error(`❌ Search error for query "${query}":`, error.message);
+    if (error.response) {
+      console.error('API Response Status:', error.response.status);
+      console.error('API Response Data:', error.response.data);
+    }
+    console.log(`🔄 Falling back to demo search results for query: "${query}"`);
     return getDemoSearchResults(query);
   }
 }
@@ -349,6 +373,20 @@ function getDemoSearchResults(query) {
 }
 
 // API Routes
+
+// API Health Check
+app.get('/api/health', (req, res) => {
+  const apiStatus = {
+    server: 'running',
+    timestamp: new Date().toISOString(),
+    spoonacular_api_configured: !!(SPOONACULAR_API_KEY && SPOONACULAR_API_KEY !== 'your_api_key_here'),
+    api_key_length: SPOONACULAR_API_KEY ? SPOONACULAR_API_KEY.length : 0,
+    environment: process.env.NODE_ENV || 'development'
+  };
+  
+  console.log('🔍 API Health Check:', apiStatus);
+  res.json(apiStatus);
+});
 
 // Get all moods
 app.get('/moods', (req, res) => {
@@ -561,10 +599,16 @@ app.get('/api/recipes/history', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  
   if (SPOONACULAR_API_KEY && SPOONACULAR_API_KEY !== 'your_api_key_here') {
     console.log('✅ Spoonacular API integration active!');
+    console.log(`🔑 API Key configured (length: ${SPOONACULAR_API_KEY.length} chars)`);
   } else {
     console.log('⚠️  Running in demo mode - add Spoonacular API key for full functionality');
+    console.log('🔧 For Render: Set SPOONACULAR_API_KEY in Dashboard > Environment tab');
   }
+  
   console.log('🍽️  Recipe app ready for Candice!');
+  console.log(`🔍 Health check available at: http://localhost:${PORT}/api/health`);
 });
