@@ -21,7 +21,8 @@ class RecipeApp {
       sad: { emoji: '😢', color: 'bg-blue-200', bgColor: 'bg-blue-200' },
       adventurous: { emoji: '🤠', color: 'bg-green-200', bgColor: 'bg-green-200' },
       relaxed: { emoji: '😌', color: 'bg-purple-200', bgColor: 'bg-purple-200' },
-      energetic: { emoji: '⚡', color: 'bg-pink-200', bgColor: 'bg-pink-200' }
+      energetic: { emoji: '⚡', color: 'bg-pink-200', bgColor: 'bg-pink-200' },
+      diet: { emoji: '🥗', color: 'bg-green-100', bgColor: 'bg-green-100' }
     };
   }
 
@@ -32,14 +33,23 @@ class RecipeApp {
       sad: 'Câlins nécessaires 🤗', 
       adventurous: 'Prête pour l\'aventure 🏍️',
       relaxed: 'Mode plage activé 🏖️',
-      energetic: 'Énergie BCG 💼⚡'
+      energetic: 'Énergie BCG 💼⚡',
+      diet: 'Healthy & Belle 💚'
     };
     return moodNames[mood] || mood.charAt(0).toUpperCase() + mood.slice(1);
   }
 
   // Personal messages for Candice
-  getPersonalMessage() {
-    const messages = [
+  getPersonalMessage(mood) {
+    const dietMessages = [
+      "Healthy & délicieux pour ma princesse en forme 💚",
+      "Nutrition de qualité pour ma belle consultante 🥗",
+      "Savoureux et sain, comme tu le mérites 💎",
+      "Pour garder ton énergie BCG au top 📈",
+      "Équilibré et délicieux, parfait pour toi 🌟"
+    ];
+    
+    const generalMessages = [
       "Ma princesse mérite le meilleur repas 👑",
       "Une recette digne de toi, ma belle 💕",
       "Inspiré par tes aventures à Paris 🏍️",
@@ -51,11 +61,27 @@ class RecipeApp {
       "Délicieux comme ton rire 🎵",
       "Un plat aussi beau que toi 🌹"
     ];
+    
+    const messages = mood === 'diet' ? dietMessages : generalMessages;
     return messages[Math.floor(Math.random() * messages.length)];
   }
 
-  // Tequila pairing suggestions for Candice
-  getTequilaPairing(category) {
+  // Drink pairing suggestions for Candice
+  getTequilaPairing(category, mood) {
+    // Healthy drink alternatives for diet mood
+    if (mood === 'diet') {
+      const healthyPairings = {
+        'appetizer': '🥤 Parfait avec de l\'eau citronnée pétillante',
+        'main course': '🍵 Accompagne bien un thé vert glacé',
+        'dessert': '🥛 Délicieux avec un smoothie protéiné',
+        'soup': '💧 Idéal avec de l\'eau infusée au concombre',
+        'salad': '🌿 Sublime avec une eau détox à la menthe',
+        'snack': '🍋 Parfait avec un kombucha frais'
+      };
+      return healthyPairings[category] || '💚 Parfait avec ta boisson healthy préférée';
+    }
+    
+    // Regular cocktail pairings
     const pairings = {
       'appetizer': '🍹 Parfait avec un Margarita classique',
       'main course': '🥃 Accompagne bien un Tequila Sunrise',
@@ -309,9 +335,9 @@ class RecipeApp {
       `;
     }
 
-    // Get personal message and tequila pairing
-    const personalMessage = this.getPersonalMessage();
-    const tequilaPairing = this.getTequilaPairing(recipe.category);
+    // Get personal message and drink pairing
+    const personalMessage = this.getPersonalMessage(recipe.mood);
+    const tequilaPairing = this.getTequilaPairing(recipe.category, recipe.mood);
     
     // Professional metrics for BCG style
     const totalTime = (recipe.prep_time || 0) + (recipe.cook_time || 0);
@@ -545,7 +571,7 @@ class RecipeApp {
 
     container.innerHTML = recipes.map(recipe => {
       const totalTime = (recipe.prep_time || 0) + (recipe.cook_time || 0);
-      const tequilaPairing = this.getTequilaPairing(recipe.category);
+      const tequilaPairing = this.getTequilaPairing(recipe.category, recipe.mood);
       return `
         <div class="recipe-grid-card" onclick="app.showRecipeDetail(${recipe.id})">
           <div class="relative">

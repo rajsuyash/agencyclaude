@@ -73,6 +73,13 @@ const moodToSearchParams = {
     tags: 'healthy,fresh,protein,vitamins',
     type: 'salad,smoothie,main course',
     cuisine: 'mediterranean,healthy'
+  },
+  diet: {
+    tags: 'healthy,low calories,weight loss,nutritious,clean eating',
+    type: 'salad,main course,soup,smoothie',
+    cuisine: 'mediterranean,healthy',
+    diet: 'vegetarian,low carb,keto,paleo',
+    maxCalories: 400
   }
 };
 
@@ -86,17 +93,23 @@ async function searchRecipesByMood(mood, excludeIds = []) {
   try {
     const searchParams = moodToSearchParams[mood] || moodToSearchParams.happy;
     
+    const requestParams = {
+      apiKey: SPOONACULAR_API_KEY,
+      tags: searchParams.tags,
+      type: searchParams.type,
+      cuisine: searchParams.cuisine,
+      number: 20,
+      addRecipeInformation: true,
+      fillIngredients: true,
+      sort: 'popularity'
+    };
+
+    // Add diet-specific parameters
+    if (searchParams.diet) requestParams.diet = searchParams.diet;
+    if (searchParams.maxCalories) requestParams.maxCalories = searchParams.maxCalories;
+
     const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
-      params: {
-        apiKey: SPOONACULAR_API_KEY,
-        tags: searchParams.tags,
-        type: searchParams.type,
-        cuisine: searchParams.cuisine,
-        number: 20,
-        addRecipeInformation: true,
-        fillIngredients: true,
-        sort: 'popularity'
-      }
+      params: requestParams
     });
 
     const recipes = response.data.results;
@@ -308,7 +321,7 @@ function getDemoSearchResults(query) {
 
 // Get all moods
 app.get('/moods', (req, res) => {
-  res.json(['happy', 'sad', 'adventurous', 'relaxed', 'energetic']);
+  res.json(['happy', 'sad', 'adventurous', 'relaxed', 'energetic', 'diet']);
 });
 
 // Get smart recipe recommendation for a mood
